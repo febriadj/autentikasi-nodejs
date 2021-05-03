@@ -1,29 +1,32 @@
 'use strict'
 
-const db = require('../config/db');
+const 
+  bcrypt = require('bcryptjs')
+, db = require('../config/db');
 
-exports.loginGet = async function(req, res, next) {
-  res.status(200).render('auth/login', {
-    message: undefined
-  })
-}
+exports.loginPost = async function (req, res, next) {
+  const { nameOrEmail, password } = req.body;
+  const sql = 'SELECT * FROM users WHERE username = ? OR email = ?';
 
-exports.loginPost = async function(req, res, next) {
-  try {
-    const { nameOrEmail, password } = req.body;
-    const sql = 'SELECT username FROM users WHERE (username = ? OR email = ?) AND password = ?';
+  await db.query(sql, [nameOrEmail, nameOrEmail], (err, result) => {
+    if (err) return res.status(500).json(err);
     
-    const result = await db.query(sql, [nameOrEmail, nameOrEmail, password])
+    try {      
+      if (!result[0]) {
+        throw 'username atau email tidak ditemukan';
+      }
 
-    if (!result[0]) {
-      throw 'pengguna tidak ditemukan'
+      if (bcrypt.compareSync(password, result[0].password) == false) {
+        throw 'password pengguna salah';
+      }
+  
+      req.session.user = result[0].username;
+      res.status(301).redirect('/');
     }
-
-    res.status(301).redirect('/');
-  }
-  catch(err) {
-    res.status(401).render('auth/login', {
-      message: err
-    })
-  }
+    catch(err) {
+      res.status(401).render('auth/login', {
+        message: err
+      })
+    }
+  })
 }
