@@ -7,11 +7,11 @@ html(lang="en")
     title Login
   body
     #auth-form
-      form(action="/login", method="post" id="wrap")
+      form(action="/", method="post" id="wrap")
+        h2.title LOGIN
         - if (message !== undefined) {
             p.pesan #{ message }
         - }
-        h2.title LOGIN
         input(type="text", name="nameOrEmail" placeholder="Username or Email")
         input(type="password", name="password" placeholder="Password")
         button(type="submit") Login
