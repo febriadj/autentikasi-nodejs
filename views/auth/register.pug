@@ -9,6 +9,9 @@ html(lang="en")
     #auth-form
       form(action="/register", method="post" id="wrap")
         h2.title REGISTER
+        - if (message !== undefined) {
+          p.pesan #{ message }
+        - }
         input(type="text", name="username" placeholder="Username")
         input(type="email", name="email" placeholder="Email")
         input(type="password", name="password" placeholder="Password")
