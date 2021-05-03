@@ -3,22 +3,26 @@
 const db = require('../config/db');
 
 exports.loginGet = async function(req, res, next) {
+  res.status(200).render('auth/login', {
+    message: undefined
+  })
+}
+
+exports.loginPost = async function(req, res, next) {
   try {
-    const { email, password } = req.body;
-    const sql = await 'SELECT email FROM users WHERE email = ? AND password = ?';
+    const { nameOrEmail, password } = req.body;
+    const sql = 'SELECT username FROM users WHERE (username = ? OR email = ?) AND password = ?';
     
-    db.query(sql, [email, password], (err, result) => {
-      if (err) res.status(500).send(err);
+    const result = await db.query(sql, [nameOrEmail, nameOrEmail, password])
 
-      if (!result[0]) {
-        return 'pengguna tidak ditemukan';
-      }
+    if (!result[0]) {
+      throw 'pengguna tidak ditemukan'
+    }
 
-      res.status(301).redirect('/')
-    })
+    res.status(301).redirect('/');
   }
   catch(err) {
-    res.status(401).render('login', {
+    res.status(401).render('auth/login', {
       message: err
     })
   }
