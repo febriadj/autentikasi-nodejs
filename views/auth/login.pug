@@ -8,8 +8,11 @@ html(lang="en")
   body
     #auth-form
       form(action="/login", method="post" id="wrap")
+        - if (message !== undefined) {
+            p.pesan #{ message }
+        - }
         h2.title LOGIN
-        input(type="text", name="username" placeholder="Username or Email")
+        input(type="text", name="nameOrEmail" placeholder="Username or Email")
         input(type="password", name="password" placeholder="Password")
         button(type="submit") Login
         a(href="/register" class="register") REGISTER
