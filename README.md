@@ -1,2 +1,2 @@
-# Nodejs Authentication
-Sistem autentikasi ( register, login, logout ) pada aplikasi website menggunakan nodejs dan mysql mysql
+# Nodejs Autentikasi
+Sistem autentikasi pengguna ( register, login, logout ) menggunakan node + express dan database mysql
